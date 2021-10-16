@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTable } from '@angular/material/table';
+import { Product } from '../models/product.models';
+import { ProductService } from '../product.service';
 
 @Component({
   selector: 'app-products-table',
@@ -6,10 +9,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./products-table.component.css']
 })
 export class ProductsTableComponent implements OnInit {
+   @ViewChild(MatTable) datatable:MatTable<any>;
+  products: Product[];
 
-  constructor() { }
+  prodColumns:string[] = ["id", "name", "price", "description", "department"];
+  constructor(private productService: ProductService) { }
 
-  ngOnInit(): void {
+  ngOnInit(){
+    this.products = this.productService.getProducts();
+    this.productService.onNewProduct
+    .subscribe((p) => {
+      this.datatable.renderRows();
+    });
   }
+  
 
 }
+
